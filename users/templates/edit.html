@@ -1,0 +1,49 @@
+{% extends  'base.html' %}
+
+{% block body %}
+<h2 class="text-2xl m-10 font-bold">👨‍🦰Edit User Profile</h2>
+<form action="" method="post" enctype="multipart/form-data" class="bg-white shadow-md m-10 px-8 pt-6 pb-8  mb-4 rounded w-4/5">
+    {% csrf_token %}
+    <div class="container py-5 mx-10">
+        <div class="error-container text-red-500 px-10">
+        {% if user_form.errors %}
+            {%for field in user_form%}
+                {{field.errors}}
+            {%endfor%}
+        {%endif%}
+    </div>
+        <div class="mb-2">
+        <label for="" class="block text-gray-700 text-sm font-bold mb-2">Firstname</label>
+        <div class="shadow appearance-none border rounded py-2 px-3 mr-10 text-gray-700">
+            {{user_form.first_name}}
+        </div>
+    </div>
+    <div class="mb-2">
+        <label for="" class="block text-gray-700 text-sm font-bold mb-2">Lastname</label>
+        <div class="shadow appearance-none border rounded py-2 px-3 mr-10 text-gray-700">
+            {{user_form.last_name}}
+        </div>
+    </div>
+    <div class="mb-2">
+        <label for="" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+        <div class="shadow appearance-none border rounded py-2 px-3 mr-10 text-gray-700">
+            {{user_form.email}}
+        </div>
+    </div>
+    <div class="mb-2">
+        <label for="" class="block text-gray-700 text-sm font-bold mb-2">Firstname</label>
+        <div class="shadow appearance-none border rounded py-2 px-3 mr-10 text-gray-700">
+            {{user_form.first_name}}
+        </div>
+    </div>
+    <div class="mb-2">
+        <label for="" class="block text-gray-700 text-sm font-bold mb-2">Profile Picture</label>
+        <div class="shadow appearance-none border rounded py-2 px-3 mr-10 text-gray-700">
+            {{profile_form.photo}}
+        </div>
+    </div>
+    <button type="submit" class="bg-green-500 my-5  px-2">Submit</button>
+    </div>
+</form>
+<p><a href="{% url 'login' %}" class="text-indigo-300">Already have an account</a></p>
+{% endblock %}

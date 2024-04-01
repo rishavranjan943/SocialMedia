@@ -1,0 +1,102 @@
+{% extends  'base.html' %}
+{% load static %}
+{%load mathfilters %}
+
+
+{% block body %}
+<div class="flex justify-center mt-5 p-10">
+    <h2 class="text-3xl font-normal mb-2 text-gray-500">Posts</h2>
+</div>
+<div class="grid grid-cols-1 mx-60 p-10">
+    {% for post in posts%}
+    <!-- cards -->
+    <a href="#">
+        <div class="rounded overflow-hidden w-[470px] h-[470px] bg-white shadow-lg">
+            <div class="user-container flex mx-5 my-5">
+            <img class="h-10 w-10 rounded-full" src="{{post.user.profile.photo.url}}" alt="">
+            <div class="mx-2 my-2 font-bold"><span class="text-indigo-500">{{post.user}}</span></div>
+            </div>
+            <img src="{{post.image.url}}" alt="">
+        </div>
+        <div class="px-2 py-4">
+            <div class="icon-container flex gap-3">
+                <a href="" id="{{post.id}}" class="btn-like">
+                    {% if user in post.liked_by.all %}
+                    <img class="w-5 m-5" src="{% static 'images/red-like.png' %}" alt="">
+                    {% else %}
+                    <img class="w-5 m-5" src="{% static 'images/like.png' %}" alt="">
+                    {%endif%}
+                </a>
+                <a href="" class="comment-btn">
+                    <img class="w-5 m-5" src="{% static 'images/comment.png' %}" alt="">
+                </a>
+            </div>
+        </div>
+        <div>
+            {% if post.liked_by.count < 1 %}
+            {% elif post.liked_by.count == 1 %}
+                {{post.liked_by.first}} Liked this
+            {% else %}
+                {{post.liked_by.first}} and {{post.liked_by.count | sub:1}} others Liked 
+            {%endif%}
+        </div>
+        <div class="px-2 py-4">
+            <div class="font-bold text-xl mb-2">{{post.title}}</div>
+            <p class="text-gray-700 text-sample">{{post.caption}}</p>
+        </div>
+        <div class="comment-section" style="display: none;">
+            <div class="px-5 py-5">
+            <form action="" method="post" class="bg-white   rounded px-8 pt-6 pb-8 mb-4">
+                {%csrf_token%}
+                <b>Add Comment</b>
+                <div class="flex">
+                    <div class=" border rounded mr-10 text-gray-700">
+                    {{comment_form.body}}
+                </div>
+                <input type="hidden" name="post_id" value="{{post.id}}">
+                <button type="submit" class="bg-green-500 text-white px-5 py-2">Add</button>
+                </div>
+            </form>
+        </div>
+        <div class="px-5 py-5">
+            {% if post.comments.all %}
+            <b>Comments : - </b><br>
+            {% for comment in post.comments.all %}
+            <!-- {{comment}} -->
+               <b>{{comment.user}} :</b>  {{comment.body}}
+                <br>
+            {%endfor%}
+            {%endif%}
+        </div>
+        </div>
+    </a>
+    <!-- cards end -->
+    {%endfor%}
+</div>
+<script type="text/javascript">
+    window.CSRF_TOKEN="{{csrf_token}}"
+    $(document).on('click','.btn-like',function(){
+        var post_id=this.id
+        $.ajax({
+            method:'POST',
+            url:'/post/like/',
+            data:{post_id:post_id,csrfmiddlewaretoken:window.CSRF_TOKEN}
+        })
+        window.location.href="http://127.0.0.1:8000/feed/"
+    })
+    document.addEventListener("DOMContentLoaded", function() {
+    var commentBtns = document.querySelectorAll('.comment-btn');
+    commentBtns.forEach(function(btn) {
+        btn.addEventListener('click', function(event) {
+            event.preventDefault();
+            var commentSection = document.querySelector('.comment-section');
+            if (commentSection.style.display === 'none') {
+                commentSection.style.display = 'block';
+            } else {
+                commentSection.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

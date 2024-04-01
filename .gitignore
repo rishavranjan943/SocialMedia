@@ -1,0 +1,10 @@
+*.sqlite3
+.env
+/migrations/
+__pycache__/
+package-lock.json
+tailwind.config.js
+node_modules
+/media/
+style.css
+tw.css
